@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# ####################################
+# ## fzf command launcher popup ######
+# ####################################
+
+
+[ -n "$MXC_V" ] && . "$HOME/.profile"
+
+all=$(compgen -c | sort -u | sed '/[^[:alpha:]]/d')
+app=$(fzf --reverse <<< "$all")
+
+[[ "$1" == '-r' ]] && exec $app & disown
+
+echo "$app" 2>&1 | tee /tmp/mfz-run-cmd
+
+exit 0
+
+#################
