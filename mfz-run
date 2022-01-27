@@ -4,10 +4,12 @@
 # ## fzf command launcher popup ######
 # ####################################
 
-[ -n "$MXC_V" ] && . "$HOME/.profile"
+source $HOME/.config/mxc/fzf.mx
+# . "$HOME/.profile"
+# [ -n "$MXC_V" ] && . "$HOME/.profile"
 
 all=$(compgen -c | sort -u | sed '/[^[:alpha:]|-]/d')
-app=$(fzf --reverse <<< "$all")
+app=$(fzf <<< "$all")
 
 [[ "$1" == '-r' ]] && exec $app & disown
 

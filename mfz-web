@@ -4,18 +4,22 @@
 # ## filters chromium history through fzf ##
 # ##########################################
 
-[ -n "$MXC_V" ] && . "$HOME/.profile"
+# [ -n "$MXC_V" ] && . "$HOME/.profile"
+# . "$HOME/.profile"
+source $HOME/.config/mxc/fzf.mx
 
 cols=$(( COLUMNS / 3 ))
 sep='{::}'
+len=200
 
 cp -f "$HOME"/.config/chromium/Default/History /tmp/h
 :> /tmp/mfz-web-cmd
 
 # ## ## ··· ######################################### ## #
 url=$(sqlite3 -separator $sep /tmp/h \
-  "select substr(title, 1, $cols), url from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  %s\n", $1, $2}'| fzf --reverse --prompt='sel one ' | sed 's#.*\(https*://\)#\1#')
+  "select substr(title, 1, $cols), url from urls  where length(url) < $len order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  %s\n", $1, $2}'| fzf --reverse --prompt=' ' | sed 's#.*\(https*://\)#\1#')
+
 
 [ -z "$url" ] || echo "chromium --app=$url" 2>&1 | tee /tmp/mfz-web-cmd
 
